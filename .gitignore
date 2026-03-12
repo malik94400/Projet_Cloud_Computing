@@ -1,0 +1,28 @@
+# IDE
+.idea/
+
+# Python
+backend/venv/
+__pycache__/
+*.pyc
+
+# Flask / SQLite
+backend/instance/
+*.db
+
+# Secrets
+.env
+backend/.env
+
+# Test files
+backend/test.txt
+
+# Terraform
+terraform/.terraform/
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+
+# macOS
+.DS_Store
