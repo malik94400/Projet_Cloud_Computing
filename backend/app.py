@@ -1,10 +1,10 @@
-import os
-from dotenv import load_dotenv
-load_dotenv()
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from azure.storage.blob import BlobServiceClient
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -12,7 +12,6 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///files.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
-# === CONFIG AZURE BLOB ===
 AZURE_STORAGE_ACCOUNT = os.getenv("AZURE_STORAGE_ACCOUNT")
 AZURE_STORAGE_KEY = os.getenv("AZURE_STORAGE_KEY")
 AZURE_CONTAINER_NAME = os.getenv("AZURE_CONTAINER_NAME")
@@ -51,10 +50,29 @@ def get_files():
 @app.route("/files", methods=["POST"])
 def add_file():
     data = request.json
+    if not data or "filename" not in data:
+        return jsonify({"error": "filename is required"}), 400
+
     new_file = File(filename=data["filename"])
     db.session.add(new_file)
     db.session.commit()
     return jsonify({"message": "File added"})
+
+@app.route("/files/<int:file_id>", methods=["PUT"])
+def update_file(file_id):
+    file = File.query.get(file_id)
+
+    if not file:
+        return jsonify({"error": "File not found"}), 404
+
+    data = request.json
+    if not data or "filename" not in data:
+        return jsonify({"error": "filename is required"}), 400
+
+    file.filename = data["filename"]
+    db.session.commit()
+
+    return jsonify({"message": "File updated"})
 
 @app.route("/files/<int:file_id>", methods=["DELETE"])
 def delete_file(file_id):
