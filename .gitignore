@@ -23,6 +23,7 @@ terraform/.terraform/
 *.tfstate
 *.tfstate.*
 crash.log
+terraform/terraform.tfvars
 
 # macOS
 .DS_Store

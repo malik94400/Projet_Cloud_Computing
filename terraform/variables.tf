@@ -25,3 +25,17 @@ variable "admin_username" {
 variable "vm_size" {
   default = "Standard_B2as_v2"
 }
+
+variable "azure_storage_account" {
+  type = string
+}
+
+variable "azure_storage_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "azure_container_name" {
+  type    = string
+  default = "files"
+}

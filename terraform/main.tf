@@ -69,6 +69,13 @@ resource "azurerm_linux_virtual_machine" "vm" {
     public_key = file("~/.ssh/azure_vm_key.pub")
   }
 
+
+  custom_data = base64encode(templatefile("${path.module}/../scripts/bootstrap.sh", {
+    azure_storage_account = var.azure_storage_account
+    azure_storage_key     = var.azure_storage_key
+    azure_container_name  = var.azure_container_name
+  }))
+
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
